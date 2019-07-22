@@ -8,7 +8,7 @@ app.use(express.json());
 
 // only requests to /calendar/* will be sent to our "router"
 var auth = express.Router();
-var api = express.Router();
+var api = express.Router(); 
 
 const courses = [
     { id: 1, name: 'Math' },
@@ -16,6 +16,7 @@ const courses = [
     { id: 3, name: 'English' },
     { id: 4, name: 'History' },
     { id: 5, name: 'Spanish' },
+    { id: 6, name: 'Spanish' }
 ];
 
 app.get('/', (req, res) => {
