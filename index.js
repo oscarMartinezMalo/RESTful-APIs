@@ -7,13 +7,12 @@ const app = express();
 app.use('/images', express.static('images'))
 
 // Read a JSON obj from the body (Middleware)
-// app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // only requests to /calendar/* will be sent to our "router"
 const auth = express.Router();
 const api = express.Router();
-
 
 const courses = [
     { id: 1, name: 'Math' },
@@ -27,7 +26,8 @@ const courses = [
 // Chaining Example
 app.route('/item')
     .get((req, res) => {
-        res.send('this is a  get request');
+        // Throw an error and cathing it in the botton
+        throw new Error()
     })
     .put((req, res) => {
         res.send('this is a put request');
@@ -165,6 +165,13 @@ function validateCourse(course) {
 
 app.use('/auth', auth);
 app.use('/api', api);
+
+
+// Error handling function
+app.use((err, req, res, next)=>{
+    console.error(err.stack);
+    res.status(500).send(`Read alert ${err.stack}`);
+})
 
 // Assign a port from the environment variable
 const port = process.env.PORT || 3000;
