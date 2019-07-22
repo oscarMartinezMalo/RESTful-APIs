@@ -2,13 +2,18 @@ import express from 'express';
 import Joi from 'joi';
 const app = express();
 
+// Load image from folder
+// http://localhost:3000/images/face.jpg
+app.use('/images', express.static('images'))
+
 // Read a JSON obj from the body (Middleware)
 // app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
 // only requests to /calendar/* will be sent to our "router"
-var auth = express.Router();
-var api = express.Router(); 
+const auth = express.Router();
+const api = express.Router();
+
 
 const courses = [
     { id: 1, name: 'Math' },
@@ -19,8 +24,15 @@ const courses = [
     { id: 6, name: 'Spanish' }
 ];
 
+// Different types of responses
+// http://localhost:3000/
 app.get('/', (req, res) => {
-    res.send('this is a get request');
+    // res.send('this is a get request');
+    // res.end();
+    // res.redirect('https://www.linkedin.com/in/oscarmmalo/');
+    res.download('images/face.jpg');
+    // res.json({ user: 'Oscar'});
+    // res.status(500).json({error:'message'});
 });
 
 auth.get('/login', (req, res) => {
@@ -52,7 +64,7 @@ api.get('/courses/:id', (req, res) => {
 
     const course = courses.find(c => c.id === parseInt(req.params.id));
     if (!course) {
-       res.status(404).send('This course was not found');
+        res.status(404).send('This course was not found');
     } else {
         res.send(course);
     }
@@ -60,7 +72,7 @@ api.get('/courses/:id', (req, res) => {
 
 // Since reading a JSON object from the body is not enable for default
 // Add the express.json() middleware on the top app.use(express.json());
-api.post('/courses', (res, req) => {
+api.post('/courses', (req, res) => {
 
     // This is the schema for the validation using Joi
     const schema = {
@@ -83,7 +95,7 @@ api.post('/courses', (res, req) => {
     res.send(course);
 });
 
-api.put('/courses/:id', (res, req) => {
+api.put('/courses/:id', (req, res) => {
     // 1 Look up the course
     // 2 If not exiting return 404
     // 3 Validate
@@ -93,16 +105,16 @@ api.put('/courses/:id', (res, req) => {
 
     // Search for the course
     const course = courses.find(c => c.id === parseInt(req.params.id));
-    if (!course){
+    if (!course) {
         return res.status(404).send('This course with the given ID was not found');
     }
 
     // Schema for the validation using Joi
-    // const result = validateCourse(req.body);
+    const result = validateCourse(req.body);
 
     // Schema for the validation using Joi and Object structuring
     const { error } = validateCourse(req.body);
-    if ( error ) {
+    if (error) {
         res.status(400).send(error.details[0].message);
         return
     }
@@ -111,14 +123,16 @@ api.put('/courses/:id', (res, req) => {
     course.name = req.body.name;
     res.send(course);
 });
-api.delete('courses/:id', (req, res)=>{
+
+api.delete('courses/:id', (req, res) => {
     // Look up the course
     // Not existin, return 404
     // Delete the course
     // Return the same course
 
+    // Return the reference to the course found
     const course = courses.find(c => c.id === parseInt(req.params.id));
-    if (!course){
+    if (!course) {
         return res.status(404).send('This course with the given ID was not found');
     }
 
