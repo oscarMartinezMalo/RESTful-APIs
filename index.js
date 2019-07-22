@@ -1,6 +1,13 @@
 import express from 'express';
-import Joi from 'joi';
+import Joi from 'joi';  // Middleware validator
+import favicon from 'serve-favicon' // Middleware for the Icon on the top of the page
+import path from 'path'
+
 const app = express();
+
+//This is for the public folder on path
+// http://localhost:3000/favicon.ico
+app.use(express.static('public'));
 
 // Load image from folder
 // http://localhost:3000/images/face.jpg
@@ -9,6 +16,10 @@ app.use('/images', express.static('images'))
 // Read a JSON obj from the body (Middleware)
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// Middleware for the Icon on the top of the page
+// The icon should be in the public
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 // only requests to /calendar/* will be sent to our "router"
 const auth = express.Router();
@@ -165,7 +176,6 @@ function validateCourse(course) {
 
 app.use('/auth', auth);
 app.use('/api', api);
-
 
 // Error handling function
 app.use((err, req, res, next)=>{
