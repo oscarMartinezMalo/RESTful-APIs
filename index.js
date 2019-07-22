@@ -24,6 +24,18 @@ const courses = [
     { id: 6, name: 'Spanish' }
 ];
 
+// Chaining Example
+app.route('/item')
+    .get((req, res) => {
+        res.send('this is a  get request');
+    })
+    .put((req, res) => {
+        res.send('this is a put request');
+    })
+    .delete((req, res) => {
+        res.send('this is a delete request');
+    })
+
 // Different types of responses
 // http://localhost:3000/
 app.get('/', (req, res) => {
