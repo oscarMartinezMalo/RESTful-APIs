@@ -2,8 +2,12 @@ import express from 'express';
 import Joi from 'joi';  // Middleware validator
 import favicon from 'serve-favicon' // Middleware for the Icon on the top of the page
 import path from 'path'
+import bird from './birdRouter';    // Routers in another file (birdRouter)
 
 const app = express();
+
+// Using the bird router file
+app.use('/bird', bird);
 
 //This is for the public folder on path
 // http://localhost:3000/favicon.ico
